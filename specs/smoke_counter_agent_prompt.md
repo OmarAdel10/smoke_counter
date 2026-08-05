@@ -37,7 +37,7 @@ HydratedBloc.storage = await HydratedStorage.build(
   2. `git checkout -b feature/<name>`
   3. Implement and test that one feature only, on that branch.
   4. Commit in small, logical, well-described commits (e.g. `feat: add DailyLog model and LogsCubit`, not one giant commit).
-  5. When the feature works: `git checkout development`, `git merge --no-ff feature/<name>`, then delete the feature branch (`git branch -d feature/<name>`).
+  5. When the feature works: `git checkout development`, `git merge --no-ff feature/<name>`, **keep the feature branch** (do not delete).
   6. Branch again from the now-updated `development` for the next feature.
 - Suggested branch order:
   1. `feature/project-setup` — Flutter project scaffold, dependencies, folder structure, theme, app icon.
