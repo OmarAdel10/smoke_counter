@@ -9,6 +9,8 @@ import 'data/cubits/settings_cubit.dart';
 import 'data/models/app_settings.dart';
 import 'features/counter/counter_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
+import 'features/settings/settings_screen.dart';
+import 'features/statistics/statistics_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -94,30 +96,6 @@ class _MainNavigationState extends State<MainNavigation> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
-      body: const Center(child: Text('Settings Screen - TODO')),
-    );
-  }
-}
-
-class StatisticsScreen extends StatelessWidget {
-  const StatisticsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Statistics')),
-      body: const Center(child: Text('Statistics Screen - TODO')),
     );
   }
 }
