@@ -6,32 +6,31 @@ import 'package:smoke_counter/data/cubits/logs_cubit.dart';
 import 'package:smoke_counter/data/cubits/settings_cubit.dart';
 
 void main() {
+  final runId = DateTime.now().millisecondsSinceEpoch;
+
   group('LogsCubit', () {
     test('initial state is empty map', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_1'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_1_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = LogsCubit();
       expect(cubit.state, isEmpty);
       cubit.close();
     });
 
     test('todayCount returns 0 when no logs exist', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_2'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_2_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = LogsCubit();
       expect(cubit.todayCount, 0);
       cubit.close();
     });
 
     test('logCigarette increments today count', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_3'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_3_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = LogsCubit();
       cubit.logCigarette();
       expect(cubit.todayCount, 1);
@@ -39,10 +38,9 @@ void main() {
     });
 
     test('logCigarette multiple times increments correctly', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_4'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_4_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = LogsCubit();
       cubit.logCigarette();
       cubit.logCigarette();
@@ -52,10 +50,9 @@ void main() {
     });
 
     test('undoLog decrements today count', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_5'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_5_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = LogsCubit();
       cubit.logCigarette();
       cubit.logCigarette();
@@ -65,10 +62,9 @@ void main() {
     });
 
     test('undoLog does not go below 0', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_6'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_6_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = LogsCubit();
       expect(cubit.todayCount, 0);
       cubit.undoLog();
@@ -77,10 +73,9 @@ void main() {
     });
 
     test('totalCigarettes sums all days', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_7'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_7_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = LogsCubit();
       final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
       cubit.emit({today: 5, '2024-01-01': 3});
@@ -89,10 +84,9 @@ void main() {
     });
 
     test('monthTotal calculates current month', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_8'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_8_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = LogsCubit();
       final now = DateTime.now();
       final monthKey = DateFormat('yyyy-MM').format(now);
@@ -102,10 +96,9 @@ void main() {
     });
 
     test('averagePerDay calculates correctly', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_9'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_9_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = LogsCubit();
       cubit.emit({'2024-01-01': 5, '2024-01-02': 7});
       expect(cubit.averagePerDay, 6.0);
@@ -113,10 +106,9 @@ void main() {
     });
 
     test('sortedLogs returns most recent first', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_10'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/logs_test_10_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = LogsCubit();
       cubit.emit({'2024-01-01': 5, '2024-01-03': 7, '2024-01-02': 3});
       final sorted = cubit.sortedLogs;
@@ -128,10 +120,9 @@ void main() {
 
   group('SettingsCubit', () {
     test('initial state has default values', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_1'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_1_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = SettingsCubit();
       expect(cubit.state.packPrice, isNull);
       expect(cubit.state.cigarettesPerPack, 20);
@@ -141,10 +132,9 @@ void main() {
     });
 
     test('setPackPrice updates packPrice', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_2'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_2_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = SettingsCubit();
       cubit.setPackPrice(10.0);
       expect(cubit.state.packPrice, 10.0);
@@ -152,10 +142,9 @@ void main() {
     });
 
     test('setCigarettesPerPack updates count', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_3'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_3_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = SettingsCubit();
       cubit.setCigarettesPerPack(25);
       expect(cubit.state.cigarettesPerPack, 25);
@@ -163,10 +152,9 @@ void main() {
     });
 
     test('costPerCigarette calculates correctly', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_4'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_4_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = SettingsCubit();
       cubit.setPackPrice(10.0);
       expect(cubit.state.costPerCigarette, 0.5);
@@ -174,10 +162,9 @@ void main() {
     });
 
     test('isInitialized returns true when packPrice set', () async {
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_5'),
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_5_$runId'),
       );
-      HydratedBloc.storage = storage;
       final cubit = SettingsCubit();
       cubit.setPackPrice(10.0);
       expect(cubit.state.isInitialized, true);
