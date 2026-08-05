@@ -39,9 +39,7 @@ class SmokeCounterApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
         home: const AppEntryPoint(),
-        routes: {
-          '/settings': (_) => const SettingsScreen(),
-        },
+        routes: {'/settings': (_) => const SettingsScreen()},
       ),
     );
   }
@@ -73,29 +71,57 @@ class MainNavigation extends StatefulWidget {
 class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
-    CounterScreen(),
-    StatisticsScreen(),
-  ];
+  final List<Widget> _screens = const [CounterScreen(), StatisticsScreen()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_currentIndex],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) => setState(() => _currentIndex = index),
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.local_fire_department_rounded),
-            label: 'Counter',
+      bottomNavigationBar: BottomAppBar(
+        padding: EdgeInsets.all(10),
+        clipBehavior: Clip.antiAlias,
+        color: Colors.transparent,
+        child: ClipRRect(
+          clipBehavior: Clip.antiAlias,
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 25),
+            decoration: BoxDecoration(
+              color: AppTheme.ember.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: BottomNavigationBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              currentIndex: _currentIndex,
+              onTap: (index) => setState(() => _currentIndex = index),
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.local_fire_department_rounded),
+                  label: 'Counter',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.analytics_rounded),
+                  label: 'Statistics',
+                ),
+              ],
+            ),
           ),
-          NavigationDestination(
-            icon: Icon(Icons.analytics_rounded),
-            label: 'Statistics',
-          ),
-        ],
+        ),
       ),
+      // bottomNavigationBar: NavigationBar(
+      //   selectedIndex: _currentIndex,
+      //   onDestinationSelected: (index) => setState(() => _currentIndex = index),
+      //   destinations: const [
+      //     NavigationDestination(
+      //       icon: Icon(Icons.local_fire_department_rounded),
+      //       label: 'Counter',
+      //     ),
+      //     NavigationDestination(
+      //       icon: Icon(Icons.analytics_rounded),
+      //       label: 'Statistics',
+      //     ),
+      //   ],
+      // ),
     );
   }
 }

@@ -80,7 +80,7 @@ class SettingsView extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '\$${settings.costPerCigarette.toStringAsFixed(4)}',
+                      'EGP ${settings.costPerCigarette.toStringAsFixed(4)}',
                       style: theme.textTheme.headlineMedium?.copyWith(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w700,
@@ -119,7 +119,7 @@ class _PriceField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: 'Pack Price',
         hintText: 'e.g. 10.00',
-        prefixText: '\$ ',
+        prefixText: 'EGP ',
         prefixStyle: theme.textTheme.bodyLarge?.copyWith(
           color: theme.colorScheme.primary,
           fontWeight: FontWeight.w600,
