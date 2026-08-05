@@ -84,7 +84,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                     decoration: InputDecoration(
                       labelText: 'Pack Price',
                       hintText: 'e.g. 10.00',
-                      prefixText: '\$ ',
+                      prefixText: 'EGP ',
                       prefixStyle: theme.textTheme.bodyLarge?.copyWith(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w600,

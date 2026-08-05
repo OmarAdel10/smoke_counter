@@ -50,7 +50,9 @@ class CounterView extends StatelessWidget {
                 const Spacer(flex: 2),
                 BlocBuilder<LogsCubit, Map<String, int>>(
                   builder: (context, state) {
-                    final todayKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                    final todayKey = DateFormat(
+                      'yyyy-MM-dd',
+                    ).format(DateTime.now());
                     final count = state[todayKey] ?? 0;
                     return Column(
                       children: [
@@ -66,7 +68,9 @@ class CounterView extends StatelessWidget {
                         Text(
                           'Cigarettes Today',
                           style: theme.textTheme.titleMedium?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.6,
+                            ),
                           ),
                         ),
                       ],
@@ -79,13 +83,17 @@ class CounterView extends StatelessWidget {
                     if (!settings.isInitialized) return const SizedBox.shrink();
                     return BlocBuilder<LogsCubit, Map<String, int>>(
                       builder: (context, state) {
-                        final todayKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                        final todayKey = DateFormat(
+                          'yyyy-MM-dd',
+                        ).format(DateTime.now());
                         final count = state[todayKey] ?? 0;
                         final spend = count * settings.costPerCigarette;
                         return Text(
-                          'Spent today: \$${spend.toStringAsFixed(2)}',
+                          'Spent today: EGP ${spend.toStringAsFixed(2)}',
                           style: theme.textTheme.titleLarge?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.7,
+                            ),
                           ),
                         );
                       },
@@ -99,7 +107,8 @@ class CounterView extends StatelessWidget {
                       width: double.infinity,
                       height: 72,
                       child: ElevatedButton.icon(
-                        onPressed: () => context.read<LogsCubit>().logCigarette(),
+                        onPressed: () =>
+                            context.read<LogsCubit>().logCigarette(),
                         icon: const Icon(Icons.add_rounded, size: 28),
                         label: const Text('Log Cigarette'),
                         style: ElevatedButton.styleFrom(
@@ -120,7 +129,9 @@ class CounterView extends StatelessWidget {
                 const SizedBox(height: 16),
                 BlocBuilder<LogsCubit, Map<String, int>>(
                   builder: (context, state) {
-                    final todayKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                    final todayKey = DateFormat(
+                      'yyyy-MM-dd',
+                    ).format(DateTime.now());
                     final count = state[todayKey] ?? 0;
                     return TextButton.icon(
                       onPressed: count > 0
@@ -129,8 +140,13 @@ class CounterView extends StatelessWidget {
                       icon: const Icon(Icons.remove_rounded, size: 20),
                       label: const Text('Undo Last'),
                       style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        foregroundColor: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.5,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
                         textStyle: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,

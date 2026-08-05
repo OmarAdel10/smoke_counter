@@ -143,14 +143,32 @@ class AppTheme {
       hintStyle: TextStyle(color: smokeGrey.withValues(alpha: 0.6)),
     ),
     textTheme: TextTheme(
-      headlineLarge: TextStyle(color: darkPrimaryText, fontWeight: FontWeight.w700),
-      headlineMedium: TextStyle(color: darkPrimaryText, fontWeight: FontWeight.w600),
-      headlineSmall: TextStyle(color: darkPrimaryText, fontWeight: FontWeight.w600),
-      titleLarge: TextStyle(color: darkPrimaryText, fontWeight: FontWeight.w600),
-      titleMedium: TextStyle(color: darkPrimaryText, fontWeight: FontWeight.w500),
+      headlineLarge: TextStyle(
+        color: darkPrimaryText,
+        fontWeight: FontWeight.w700,
+      ),
+      headlineMedium: TextStyle(
+        color: darkPrimaryText,
+        fontWeight: FontWeight.w600,
+      ),
+      headlineSmall: TextStyle(
+        color: darkPrimaryText,
+        fontWeight: FontWeight.w600,
+      ),
+      titleLarge: TextStyle(
+        color: darkPrimaryText,
+        fontWeight: FontWeight.w600,
+      ),
+      titleMedium: TextStyle(
+        color: darkPrimaryText,
+        fontWeight: FontWeight.w500,
+      ),
       bodyLarge: TextStyle(color: darkPrimaryText),
       bodyMedium: TextStyle(color: darkPrimaryText),
-      labelLarge: TextStyle(color: darkPrimaryText, fontWeight: FontWeight.w600),
+      labelLarge: TextStyle(
+        color: darkPrimaryText,
+        fontWeight: FontWeight.w600,
+      ),
     ),
     iconTheme: IconThemeData(color: darkPrimaryText),
     dividerColor: smokeGrey.withValues(alpha: 0.15),
