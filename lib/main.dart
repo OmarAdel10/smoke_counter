@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'core/theme/app_theme.dart';
+import 'data/cubits/logs_cubit.dart';
+import 'data/cubits/settings_cubit.dart';
+import 'data/models/app_settings.dart';
+import 'features/onboarding/onboarding_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,13 +24,35 @@ class SmokeCounterApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Smoke Counter',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      home: const PlaceholderScreen(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => LogsCubit()),
+        BlocProvider(create: (_) => SettingsCubit()),
+      ],
+      child: MaterialApp(
+        title: 'Smoke Counter',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
+        home: const AppEntryPoint(),
+      ),
+    );
+  }
+}
+
+class AppEntryPoint extends StatelessWidget {
+  const AppEntryPoint({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SettingsCubit, AppSettings>(
+      builder: (context, settings) {
+        if (settings.isInitialized) {
+          return const PlaceholderScreen();
+        }
+        return const OnboardingScreen();
+      },
     );
   }
 }
