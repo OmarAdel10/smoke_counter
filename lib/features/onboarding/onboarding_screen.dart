@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:smoke_counter/data/cubits/settings_cubit.dart';
-import 'package:smoke_counter/main.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -38,9 +37,7 @@ class _OnboardingViewState extends State<OnboardingView> {
       final price = double.tryParse(_controller.text.replaceAll(',', '.'));
       if (price != null && price > 0) {
         context.read<SettingsCubit>().setPackPrice(price);
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const PlaceholderScreen()),
-        );
+        Navigator.of(context).pushReplacementNamed('/');
       }
     }
   }
