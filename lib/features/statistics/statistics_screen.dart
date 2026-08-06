@@ -41,10 +41,7 @@ class StatisticsView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(
-              height: MediaQuery.sizeOf(context).height * 0.23,
-              child: _buildSummaryCards(context),
-            ),
+            _buildSummaryCards(context),
             Divider(
               color: AppTheme.charcoal.withValues(alpha: 0.3),
               indent: 20,

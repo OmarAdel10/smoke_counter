@@ -12,9 +12,9 @@ class AppSettings extends Equatable {
   @override
   List<Object?> get props => [packPrice, cigarettesPerPack];
 
-  AppSettings copyWith({double? packPrice, int? cigarettesPerPack}) {
+  AppSettings copyWith({double? packPrice, int? cigarettesPerPack, bool clearPackPrice = false}) {
     return AppSettings(
-      packPrice: packPrice ?? this.packPrice,
+      packPrice: clearPackPrice ? null : (packPrice ?? this.packPrice),
       cigarettesPerPack: cigarettesPerPack ?? this.cigarettesPerPack,
     );
   }

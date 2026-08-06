@@ -67,4 +67,4 @@ jobs:
         run: flutter pub get
 
       - name: Run tests
-        run: flutter test test/data/cubits/cubits_test.dart -j 1
+        run: flutter test -j 1

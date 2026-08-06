@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import 'package:smoke_counter/data/cubits/logs_cubit.dart';
 import 'package:smoke_counter/data/cubits/settings_cubit.dart';
+import 'package:smoke_counter/data/models/app_settings.dart';
 
 void main() {
   final runId = DateTime.now().millisecondsSinceEpoch;
@@ -168,6 +169,55 @@ void main() {
       final cubit = SettingsCubit();
       cubit.setPackPrice(10.0);
       expect(cubit.state.isInitialized, true);
+      cubit.close();
+    });
+  });
+
+  group('LogsCubit serialization', () {
+    test('fromJson deserializes correctly', () {
+      final cubit = LogsCubit();
+      final json = {'2024-01-01': 5, '2024-01-02': 3};
+      final result = cubit.fromJson(json);
+      expect(result['2024-01-01'], 5);
+      expect(result['2024-01-02'], 3);
+      cubit.close();
+    });
+
+    test('toJson serializes correctly', () {
+      final cubit = LogsCubit();
+      const state = {'2024-01-01': 5, '2024-01-02': 3};
+      final result = cubit.toJson(state);
+      expect(result['2024-01-01'], 5);
+      expect(result['2024-01-02'], 3);
+      cubit.close();
+    });
+  });
+
+  group('SettingsCubit serialization', () {
+    test('fromJson deserializes with packPrice', () {
+      final cubit = SettingsCubit();
+      final json = {'packPrice': 15.0, 'cigarettesPerPack': 25};
+      final result = cubit.fromJson(json);
+      expect(result.packPrice, 15.0);
+      expect(result.cigarettesPerPack, 25);
+      cubit.close();
+    });
+
+    test('fromJson deserializes without packPrice (defaults)', () {
+      final cubit = SettingsCubit();
+      final json = <String, dynamic>{};
+      final result = cubit.fromJson(json);
+      expect(result.packPrice, isNull);
+      expect(result.cigarettesPerPack, 20);
+      cubit.close();
+    });
+
+    test('toJson serializes correctly', () {
+      final cubit = SettingsCubit();
+      const state = AppSettings(packPrice: 20.0, cigarettesPerPack: 25);
+      final result = cubit.toJson(state);
+      expect(result['packPrice'], 20.0);
+      expect(result['cigarettesPerPack'], 25);
       cubit.close();
     });
   });
