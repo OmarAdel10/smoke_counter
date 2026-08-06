@@ -11,205 +11,178 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('App Navigation & Routing', () {
-    late LogsCubit logsCubit;
-    late SettingsCubit settingsCubit;
-
-    setUp(() async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      HydratedBloc.storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_$runId'),
+    Widget buildTestWidget({
+      required LogsCubit logsCubit,
+      required SettingsCubit settingsCubit,
+      Map<String, Widget Function(BuildContext)>? routes,
+    }) {
+      return MaterialApp(
+        home: MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: logsCubit),
+            BlocProvider.value(value: settingsCubit),
+          ],
+          child: const AppEntryPoint(),
+        ),
+        routes: routes ?? {
+          '/settings': (_) => const Scaffold(body: Text('Settings')),
+        },
       );
-      logsCubit = LogsCubit();
-      settingsCubit = SettingsCubit();
-    });
+    }
 
-    tearDown(() {
+    testWidgets('AppEntryPoint shows Onboarding when packPrice not set', (WidgetTester tester) async {
+      final runId = DateTime.now().millisecondsSinceEpoch;
+      final storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_1'),
+      );
+      HydratedBloc.storage = storage;
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+
+      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+      expect(find.text('Welcome to Smoke Counter'), findsOneWidget);
+      expect(find.text('How much does a pack of cigarettes cost?'), findsOneWidget);
+
       logsCubit.close();
       settingsCubit.close();
     });
 
-    testWidgets('AppEntryPoint shows Onboarding when packPrice not set', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: logsCubit),
-              BlocProvider.value(value: settingsCubit),
-            ],
-            child: const AppEntryPoint(),
-          ),
-        ),
-      );
-      expect(find.text('Welcome to Smoke Counter'), findsOneWidget);
-      expect(find.text('How much does a pack of cigarettes cost?'), findsOneWidget);
-    });
-
     testWidgets('AppEntryPoint shows MainNavigation when packPrice is set', (WidgetTester tester) async {
-      settingsCubit.setPackPrice(10.0);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: logsCubit),
-              BlocProvider.value(value: settingsCubit),
-            ],
-            child: const AppEntryPoint(),
-          ),
-          routes: {
-            '/settings': (_) => const Scaffold(body: Text('Settings')),
-          },
-        ),
+      final runId = DateTime.now().millisecondsSinceEpoch;
+      final storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_2'),
       );
-      expect(find.text('Counter'), findsOneWidget); // Bottom nav label
-      expect(find.text('Statistics'), findsOneWidget); // Bottom nav label
+      HydratedBloc.storage = storage;
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+      settingsCubit.setPackPrice(10.0);
+
+      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+      expect(find.text('Counter'), findsOneWidget);
+      expect(find.text('Statistics'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
     });
 
     testWidgets('Onboarding submits pack price and navigates to main', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: logsCubit),
-              BlocProvider.value(value: settingsCubit),
-            ],
-            child: const AppEntryPoint(),
-          ),
-          routes: {
-            '/settings': (_) => const Scaffold(body: Text('Settings')),
-          },
-        ),
+      final runId = DateTime.now().millisecondsSinceEpoch;
+      final storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_3'),
       );
+      HydratedBloc.storage = storage;
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
 
-      // Verify we're on onboarding
+      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+
       expect(find.text('Welcome to Smoke Counter'), findsOneWidget);
 
-      // Enter pack price
       await tester.enterText(find.byType(TextFormField), '12.50');
       await tester.tap(find.text('Continue'));
       await tester.pumpAndSettle();
 
-      // Should navigate to main app (Counter tab)
       expect(find.text('Counter'), findsOneWidget);
       expect(find.text('Statistics'), findsOneWidget);
-
-      // Verify settings saved
       expect(settingsCubit.state.packPrice, 12.50);
+
+      logsCubit.close();
+      settingsCubit.close();
     });
 
     testWidgets('Bottom navigation switches between Counter and Statistics', (WidgetTester tester) async {
-      settingsCubit.setPackPrice(10.0);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: logsCubit),
-              BlocProvider.value(value: settingsCubit),
-            ],
-            child: const AppEntryPoint(),
-          ),
-          routes: {
-            '/settings': (_) => const Scaffold(body: Text('Settings')),
-          },
-        ),
+      final runId = DateTime.now().millisecondsSinceEpoch;
+      final storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_4'),
       );
+      HydratedBloc.storage = storage;
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+      settingsCubit.setPackPrice(10.0);
 
-      // Start on Counter tab
+      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+
       expect(find.byIcon(Icons.local_fire_department_rounded), findsOneWidget);
       expect(find.byIcon(Icons.analytics_rounded), findsOneWidget);
 
-      // Tap Statistics tab
       await tester.tap(find.text('Statistics').first);
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300)); // Animation
+      await tester.pump(const Duration(milliseconds: 300));
 
-      // Verify Statistics screen shown - AppBar title
       expect(find.byWidgetPredicate((w) => w is AppBar && w.title is Text && (w.title as Text).data == 'Statistics'), findsOneWidget);
-      expect(find.text('No data yet'), findsOneWidget); // Empty state
+      expect(find.text('No data yet'), findsOneWidget);
 
-      // Tap Counter tab
       await tester.tap(find.text('Counter').first);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
-      // Verify Counter screen shown
       expect(find.byIcon(Icons.local_fire_department_rounded), findsOneWidget);
       expect(find.text('Cigarettes Today'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
     });
 
     testWidgets('Settings accessible from Counter screen via app bar', (WidgetTester tester) async {
-      settingsCubit.setPackPrice(10.0);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: logsCubit),
-              BlocProvider.value(value: settingsCubit),
-            ],
-            child: const AppEntryPoint(),
-          ),
-          routes: {
-            '/settings': (_) => const Scaffold(body: Text('Settings Screen')),
-          },
-        ),
+      final runId = DateTime.now().millisecondsSinceEpoch;
+      final storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_5'),
       );
+      HydratedBloc.storage = storage;
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+      settingsCubit.setPackPrice(10.0);
 
-      // Tap settings icon
+      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+
       await tester.tap(find.byIcon(Icons.settings_rounded));
       await tester.pumpAndSettle();
 
       expect(find.text('Settings Screen'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
     });
 
     testWidgets('Settings accessible from Statistics screen via app bar', (WidgetTester tester) async {
-      settingsCubit.setPackPrice(10.0);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: logsCubit),
-              BlocProvider.value(value: settingsCubit),
-            ],
-            child: const AppEntryPoint(),
-          ),
-          routes: {
-            '/settings': (_) => const Scaffold(body: Text('Settings Screen')),
-          },
-        ),
+      final runId = DateTime.now().millisecondsSinceEpoch;
+      final storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_6'),
       );
+      HydratedBloc.storage = storage;
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+      settingsCubit.setPackPrice(10.0);
 
-      // Switch to Statistics tab
+      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+
       await tester.tap(find.text('Statistics'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
-      // Tap settings icon
       await tester.tap(find.byIcon(Icons.settings_rounded));
       await tester.pumpAndSettle();
 
       expect(find.text('Settings Screen'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
     });
 
     testWidgets('Counter log button increments and updates spend', (WidgetTester tester) async {
-      settingsCubit.setPackPrice(20.0); // 20/20 = 1.0 per cigarette
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: logsCubit),
-              BlocProvider.value(value: settingsCubit),
-            ],
-            child: const AppEntryPoint(),
-          ),
-          routes: {
-            '/settings': (_) => const Scaffold(body: Text('Settings')),
-          },
-        ),
+      final runId = DateTime.now().millisecondsSinceEpoch;
+      final storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_7'),
       );
+      HydratedBloc.storage = storage;
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+      settingsCubit.setPackPrice(20.0);
 
-      // Initial spend
+      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+
       expect(find.text('Spent today: EGP 0.00'), findsOneWidget);
 
-      // Log 3 cigarettes
       await tester.tap(find.byIcon(Icons.add_rounded));
       await tester.pump();
       await tester.tap(find.byIcon(Icons.add_rounded));
@@ -220,69 +193,67 @@ void main() {
       expect(find.text('3'), findsOneWidget);
       expect(find.text('Spent today: EGP 3.00'), findsOneWidget);
 
-      // Undo one
       await tester.tap(find.byIcon(Icons.remove_rounded));
       await tester.pump();
 
       expect(find.text('2'), findsOneWidget);
       expect(find.text('Spent today: EGP 2.00'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
     });
 
     testWidgets('Onboarding validation shows error for empty input', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: logsCubit),
-              BlocProvider.value(value: settingsCubit),
-            ],
-            child: const AppEntryPoint(),
-          ),
-        ),
+      final runId = DateTime.now().millisecondsSinceEpoch;
+      final storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_8'),
       );
+      HydratedBloc.storage = storage;
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
 
-      // Try to continue without entering price
+      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+
       await tester.tap(find.text('Continue'));
       await tester.pump();
 
       expect(find.text('Please enter a price'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
     });
 
     testWidgets('Onboarding validation shows error for invalid number', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: logsCubit),
-              BlocProvider.value(value: settingsCubit),
-            ],
-            child: const AppEntryPoint(),
-          ),
-        ),
+      final runId = DateTime.now().millisecondsSinceEpoch;
+      final storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_9'),
       );
+      HydratedBloc.storage = storage;
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+
+      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
 
       await tester.enterText(find.byType(TextFormField), 'abc');
       await tester.tap(find.text('Continue'));
       await tester.pump();
 
       expect(find.text('Enter a valid price'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
     });
 
     testWidgets('Onboarding accepts decimal comma', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: logsCubit),
-              BlocProvider.value(value: settingsCubit),
-            ],
-            child: const AppEntryPoint(),
-          ),
-          routes: {
-            '/settings': (_) => const Scaffold(body: Text('Settings')),
-          },
-        ),
+      final runId = DateTime.now().millisecondsSinceEpoch;
+      final storage = await HydratedStorage.build(
+        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_10'),
       );
+      HydratedBloc.storage = storage;
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+
+      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
 
       await tester.enterText(find.byType(TextFormField), '10,50');
       await tester.tap(find.text('Continue'));
@@ -290,6 +261,9 @@ void main() {
 
       expect(settingsCubit.state.packPrice, 10.50);
       expect(find.text('Counter'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
     });
   });
 }
