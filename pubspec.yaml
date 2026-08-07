@@ -44,12 +44,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   bloc_test: ^10.0.0
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.10
   flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
@@ -91,5 +87,23 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/to/font-from-package
+# For details regarding fonts from package dependencies,
+# see https://flutter.dev/to/font-from-package
+
+flutter_launcher_icons:
+  image_path: "assets/images/smoke_counter_logo.png"
+  android: true
+  ios: false
+  remove_alpha_android: true
+  adaptive_icon_background: "#E8623D"
+  adaptive_icon_foreground: "assets/images/smoke_counter_logo.png"
+
+flutter_native_splash:
+  color: "#F7F3EE"
+  image: "assets/images/smoke_counter_logo.png"
+  android: true
+  ios: false
+  web: false
+  fullscreen: true
+  color_dark: "#1C1E20"
+  image_dark: "assets/images/smoke_counter_logo.png"
