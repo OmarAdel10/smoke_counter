@@ -42,7 +42,7 @@ void main() {
           ),
         ),
       );
-      
+
       final today = DateFormat('EEEE, MMM d').format(DateTime.now());
       expect(find.text(today), findsOneWidget);
 
@@ -68,7 +68,7 @@ void main() {
           ),
         ),
       );
-      
+
       expect(find.text('0'), findsOneWidget);
       expect(find.text('Cigarettes Today'), findsOneWidget);
 
@@ -76,7 +76,9 @@ void main() {
       settingsCubit.close();
     });
 
-    testWidgets('displays spend when settings initialized', (WidgetTester tester) async {
+    testWidgets('displays spend when settings initialized', (
+      WidgetTester tester,
+    ) async {
       HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
@@ -95,7 +97,7 @@ void main() {
           ),
         ),
       );
-      
+
       expect(find.text('Spent today: EGP 0.00'), findsOneWidget);
 
       logsCubit.close();
@@ -120,7 +122,7 @@ void main() {
           ),
         ),
       );
-      
+
       expect(find.byIcon(Icons.add_rounded), findsOneWidget);
       expect(find.text('Log Cigarette'), findsOneWidget);
 
@@ -128,7 +130,9 @@ void main() {
       settingsCubit.close();
     });
 
-testWidgets('displays undo button (disabled at zero)', (WidgetTester tester) async {
+    testWidgets('displays undo button (disabled at zero)', (
+      WidgetTester tester,
+    ) async {
       HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
@@ -159,7 +163,9 @@ testWidgets('displays undo button (disabled at zero)', (WidgetTester tester) asy
       settingsCubit.close();
     });
 
-    testWidgets('spend displays correctly with settings', (WidgetTester tester) async {
+    testWidgets('spend displays correctly with settings', (
+      WidgetTester tester,
+    ) async {
       HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
@@ -178,7 +184,7 @@ testWidgets('displays undo button (disabled at zero)', (WidgetTester tester) asy
           ),
         ),
       );
-      
+
       expect(find.text('Spent today: EGP 0.00'), findsOneWidget);
 
       logsCubit.close();
@@ -203,7 +209,7 @@ testWidgets('displays undo button (disabled at zero)', (WidgetTester tester) asy
           ),
         ),
       );
-      
+
       expect(find.byIcon(Icons.settings_rounded), findsOneWidget);
 
       logsCubit.close();

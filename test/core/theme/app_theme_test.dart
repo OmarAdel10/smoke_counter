@@ -31,7 +31,10 @@ void main() {
     });
 
     test('scaffold background is warm off-white', () {
-      expect(AppTheme.lightTheme.scaffoldBackgroundColor, AppTheme.warmOffWhite);
+      expect(
+        AppTheme.lightTheme.scaffoldBackgroundColor,
+        AppTheme.warmOffWhite,
+      );
     });
 
     test('primary color is ember', () {
@@ -51,11 +54,17 @@ void main() {
     });
 
     test('appBar background is warm off-white', () {
-      expect(AppTheme.lightTheme.appBarTheme.backgroundColor, AppTheme.warmOffWhite);
+      expect(
+        AppTheme.lightTheme.appBarTheme.backgroundColor,
+        AppTheme.warmOffWhite,
+      );
     });
 
     test('appBar foreground is charcoal', () {
-      expect(AppTheme.lightTheme.appBarTheme.foregroundColor, AppTheme.charcoal);
+      expect(
+        AppTheme.lightTheme.appBarTheme.foregroundColor,
+        AppTheme.charcoal,
+      );
     });
 
     test('elevatedButton uses ember background', () {
@@ -72,13 +81,19 @@ void main() {
       final cardTheme = AppTheme.lightTheme.cardTheme;
       expect(cardTheme.color, Colors.white);
       expect(cardTheme.shape, isA<RoundedRectangleBorder>());
-      expect((cardTheme.shape as RoundedRectangleBorder).borderRadius, BorderRadius.circular(16));
+      expect(
+        (cardTheme.shape as RoundedRectangleBorder).borderRadius,
+        BorderRadius.circular(16),
+      );
     });
 
     test('input decoration has rounded borders', () {
       final inputTheme = AppTheme.lightTheme.inputDecorationTheme;
       expect(inputTheme.border, isA<OutlineInputBorder>());
-      expect((inputTheme.border as OutlineInputBorder).borderRadius, BorderRadius.circular(12));
+      expect(
+        (inputTheme.border as OutlineInputBorder).borderRadius,
+        BorderRadius.circular(12),
+      );
     });
 
     test('text theme headlineLarge is charcoal w700', () {
@@ -98,7 +113,10 @@ void main() {
     });
 
     test('scaffold background is dark background', () {
-      expect(AppTheme.darkTheme.scaffoldBackgroundColor, AppTheme.darkBackground);
+      expect(
+        AppTheme.darkTheme.scaffoldBackgroundColor,
+        AppTheme.darkBackground,
+      );
     });
 
     test('primary color is ember', () {
@@ -114,15 +132,24 @@ void main() {
     });
 
     test('onSurface is dark primary text', () {
-      expect(AppTheme.darkTheme.colorScheme.onSurface, AppTheme.darkPrimaryText);
+      expect(
+        AppTheme.darkTheme.colorScheme.onSurface,
+        AppTheme.darkPrimaryText,
+      );
     });
 
     test('appBar background is dark background', () {
-      expect(AppTheme.darkTheme.appBarTheme.backgroundColor, AppTheme.darkBackground);
+      expect(
+        AppTheme.darkTheme.appBarTheme.backgroundColor,
+        AppTheme.darkBackground,
+      );
     });
 
     test('appBar foreground is dark primary text', () {
-      expect(AppTheme.darkTheme.appBarTheme.foregroundColor, AppTheme.darkPrimaryText);
+      expect(
+        AppTheme.darkTheme.appBarTheme.foregroundColor,
+        AppTheme.darkPrimaryText,
+      );
     });
 
     test('elevatedButton uses ember background', () {
@@ -147,10 +174,12 @@ void main() {
     test('elevatedButton has 16px border radius', () {
       final lightStyle = AppTheme.lightTheme.elevatedButtonTheme.style;
       final darkStyle = AppTheme.darkTheme.elevatedButtonTheme.style;
-      
-      final lightShape = lightStyle?.shape?.resolve({}) as RoundedRectangleBorder?;
-      final darkShape = darkStyle?.shape?.resolve({}) as RoundedRectangleBorder?;
-      
+
+      final lightShape =
+          lightStyle?.shape?.resolve({}) as RoundedRectangleBorder?;
+      final darkShape =
+          darkStyle?.shape?.resolve({}) as RoundedRectangleBorder?;
+
       expect(lightShape?.borderRadius, BorderRadius.circular(16));
       expect(darkShape?.borderRadius, BorderRadius.circular(16));
     });
@@ -158,14 +187,26 @@ void main() {
     test('input decoration focused border is ember with width 2', () {
       final lightInput = AppTheme.lightTheme.inputDecorationTheme;
       final darkInput = AppTheme.darkTheme.inputDecorationTheme;
-      
+
       expect(lightInput.focusedBorder, isA<OutlineInputBorder>());
-      expect((lightInput.focusedBorder as OutlineInputBorder).borderSide.color, AppTheme.ember);
-      expect((lightInput.focusedBorder as OutlineInputBorder).borderSide.width, 2);
-      
+      expect(
+        (lightInput.focusedBorder as OutlineInputBorder).borderSide.color,
+        AppTheme.ember,
+      );
+      expect(
+        (lightInput.focusedBorder as OutlineInputBorder).borderSide.width,
+        2,
+      );
+
       expect(darkInput.focusedBorder, isA<OutlineInputBorder>());
-      expect((darkInput.focusedBorder as OutlineInputBorder).borderSide.color, AppTheme.ember);
-      expect((darkInput.focusedBorder as OutlineInputBorder).borderSide.width, 2);
+      expect(
+        (darkInput.focusedBorder as OutlineInputBorder).borderSide.color,
+        AppTheme.ember,
+      );
+      expect(
+        (darkInput.focusedBorder as OutlineInputBorder).borderSide.width,
+        2,
+      );
     });
   });
 }

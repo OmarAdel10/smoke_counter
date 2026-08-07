@@ -80,7 +80,9 @@ class _OnboardingViewState extends State<OnboardingView> {
                   const SizedBox(height: 32),
                   TextFormField(
                     controller: _controller,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     decoration: InputDecoration(
                       labelText: 'Pack Price',
                       hintText: 'e.g. 10.00',

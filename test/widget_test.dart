@@ -24,13 +24,15 @@ void main() {
           ],
           child: const AppEntryPoint(),
         ),
-        routes: routes ?? {
-          '/settings': (_) => const Scaffold(body: Text('Settings')),
-        },
+        routes:
+            routes ??
+            {'/settings': (_) => const Scaffold(body: Text('Settings'))},
       );
     }
 
-    testWidgets('AppEntryPoint shows Onboarding when packPrice not set', (WidgetTester tester) async {
+    testWidgets('AppEntryPoint shows Onboarding when packPrice not set', (
+      WidgetTester tester,
+    ) async {
       final runId = DateTime.now().millisecondsSinceEpoch;
       final storage = await HydratedStorage.build(
         storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_1'),
@@ -39,15 +41,22 @@ void main() {
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 
-      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
       expect(find.text('Welcome to Smoke Counter'), findsOneWidget);
-      expect(find.text('How much does a pack of cigarettes cost?'), findsOneWidget);
+      expect(
+        find.text('How much does a pack of cigarettes cost?'),
+        findsOneWidget,
+      );
 
       logsCubit.close();
       settingsCubit.close();
     });
 
-    testWidgets('AppEntryPoint shows MainNavigation when packPrice is set', (WidgetTester tester) async {
+    testWidgets('AppEntryPoint shows MainNavigation when packPrice is set', (
+      WidgetTester tester,
+    ) async {
       final runId = DateTime.now().millisecondsSinceEpoch;
       final storage = await HydratedStorage.build(
         storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_2'),
@@ -57,7 +66,9 @@ void main() {
       final settingsCubit = SettingsCubit();
       settingsCubit.setPackPrice(10.0);
 
-      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
       expect(find.text('Counter'), findsOneWidget);
       expect(find.text('Statistics'), findsOneWidget);
 
@@ -65,7 +76,9 @@ void main() {
       settingsCubit.close();
     });
 
-    testWidgets('Onboarding submits pack price and navigates to main', (WidgetTester tester) async {
+    testWidgets('Onboarding submits pack price and navigates to main', (
+      WidgetTester tester,
+    ) async {
       final runId = DateTime.now().millisecondsSinceEpoch;
       final storage = await HydratedStorage.build(
         storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_3'),
@@ -74,7 +87,9 @@ void main() {
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 
-      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
 
       expect(find.text('Welcome to Smoke Counter'), findsOneWidget);
 
@@ -90,7 +105,9 @@ void main() {
       settingsCubit.close();
     });
 
-    testWidgets('Bottom navigation switches between Counter and Statistics', (WidgetTester tester) async {
+    testWidgets('Bottom navigation switches between Counter and Statistics', (
+      WidgetTester tester,
+    ) async {
       final runId = DateTime.now().millisecondsSinceEpoch;
       final storage = await HydratedStorage.build(
         storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_4'),
@@ -100,7 +117,9 @@ void main() {
       final settingsCubit = SettingsCubit();
       settingsCubit.setPackPrice(10.0);
 
-      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
 
       expect(find.byIcon(Icons.local_fire_department_rounded), findsOneWidget);
       expect(find.byIcon(Icons.analytics_rounded), findsOneWidget);
@@ -109,7 +128,15 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
-      expect(find.byWidgetPredicate((w) => w is AppBar && w.title is Text && (w.title as Text).data == 'Statistics'), findsOneWidget);
+      expect(
+        find.byWidgetPredicate(
+          (w) =>
+              w is AppBar &&
+              w.title is Text &&
+              (w.title as Text).data == 'Statistics',
+        ),
+        findsOneWidget,
+      );
       expect(find.text('No data yet'), findsOneWidget);
 
       await tester.tap(find.text('Counter').first);
@@ -123,7 +150,9 @@ void main() {
       settingsCubit.close();
     });
 
-    testWidgets('Settings accessible from Counter screen via app bar', (WidgetTester tester) async {
+    testWidgets('Settings accessible from Counter screen via app bar', (
+      WidgetTester tester,
+    ) async {
       final runId = DateTime.now().millisecondsSinceEpoch;
       final storage = await HydratedStorage.build(
         storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_5'),
@@ -133,7 +162,9 @@ void main() {
       final settingsCubit = SettingsCubit();
       settingsCubit.setPackPrice(10.0);
 
-      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
 
       await tester.tap(find.byIcon(Icons.settings_rounded));
       await tester.pumpAndSettle();
@@ -144,7 +175,9 @@ void main() {
       settingsCubit.close();
     });
 
-    testWidgets('Settings accessible from Statistics screen via app bar', (WidgetTester tester) async {
+    testWidgets('Settings accessible from Statistics screen via app bar', (
+      WidgetTester tester,
+    ) async {
       final runId = DateTime.now().millisecondsSinceEpoch;
       final storage = await HydratedStorage.build(
         storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_6'),
@@ -154,7 +187,9 @@ void main() {
       final settingsCubit = SettingsCubit();
       settingsCubit.setPackPrice(10.0);
 
-      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
 
       await tester.tap(find.text('Statistics'));
       await tester.pump();
@@ -169,7 +204,9 @@ void main() {
       settingsCubit.close();
     });
 
-    testWidgets('Counter log button increments and updates spend', (WidgetTester tester) async {
+    testWidgets('Counter log button increments and updates spend', (
+      WidgetTester tester,
+    ) async {
       final runId = DateTime.now().millisecondsSinceEpoch;
       final storage = await HydratedStorage.build(
         storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_7'),
@@ -179,7 +216,9 @@ void main() {
       final settingsCubit = SettingsCubit();
       settingsCubit.setPackPrice(20.0);
 
-      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
 
       expect(find.text('Spent today: EGP 0.00'), findsOneWidget);
 
@@ -203,7 +242,9 @@ void main() {
       settingsCubit.close();
     });
 
-    testWidgets('Onboarding validation shows error for empty input', (WidgetTester tester) async {
+    testWidgets('Onboarding validation shows error for empty input', (
+      WidgetTester tester,
+    ) async {
       final runId = DateTime.now().millisecondsSinceEpoch;
       final storage = await HydratedStorage.build(
         storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_8'),
@@ -212,7 +253,9 @@ void main() {
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 
-      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
 
       await tester.tap(find.text('Continue'));
       await tester.pump();
@@ -223,7 +266,9 @@ void main() {
       settingsCubit.close();
     });
 
-    testWidgets('Onboarding validation shows error for invalid number', (WidgetTester tester) async {
+    testWidgets('Onboarding validation shows error for invalid number', (
+      WidgetTester tester,
+    ) async {
       final runId = DateTime.now().millisecondsSinceEpoch;
       final storage = await HydratedStorage.build(
         storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_9'),
@@ -232,7 +277,9 @@ void main() {
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 
-      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
 
       await tester.enterText(find.byType(TextFormField), 'abc');
       await tester.tap(find.text('Continue'));
@@ -244,7 +291,9 @@ void main() {
       settingsCubit.close();
     });
 
-    testWidgets('Onboarding accepts decimal comma', (WidgetTester tester) async {
+    testWidgets('Onboarding accepts decimal comma', (
+      WidgetTester tester,
+    ) async {
       final runId = DateTime.now().millisecondsSinceEpoch;
       final storage = await HydratedStorage.build(
         storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_10'),
@@ -253,7 +302,9 @@ void main() {
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 
-      await tester.pumpWidget(buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit));
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
 
       await tester.enterText(find.byType(TextFormField), '10,50');
       await tester.tap(find.text('Continue'));

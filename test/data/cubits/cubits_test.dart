@@ -122,7 +122,9 @@ void main() {
   group('SettingsCubit', () {
     test('initial state has default values', () async {
       HydratedBloc.storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_1_$runId'),
+        storageDirectory: HydratedStorageDirectory(
+          '/tmp/settings_test_1_$runId',
+        ),
       );
       final cubit = SettingsCubit();
       expect(cubit.state.packPrice, isNull);
@@ -134,7 +136,9 @@ void main() {
 
     test('setPackPrice updates packPrice', () async {
       HydratedBloc.storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_2_$runId'),
+        storageDirectory: HydratedStorageDirectory(
+          '/tmp/settings_test_2_$runId',
+        ),
       );
       final cubit = SettingsCubit();
       cubit.setPackPrice(10.0);
@@ -144,7 +148,9 @@ void main() {
 
     test('setCigarettesPerPack updates count', () async {
       HydratedBloc.storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_3_$runId'),
+        storageDirectory: HydratedStorageDirectory(
+          '/tmp/settings_test_3_$runId',
+        ),
       );
       final cubit = SettingsCubit();
       cubit.setCigarettesPerPack(25);
@@ -154,7 +160,9 @@ void main() {
 
     test('costPerCigarette calculates correctly', () async {
       HydratedBloc.storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_4_$runId'),
+        storageDirectory: HydratedStorageDirectory(
+          '/tmp/settings_test_4_$runId',
+        ),
       );
       final cubit = SettingsCubit();
       cubit.setPackPrice(10.0);
@@ -164,7 +172,9 @@ void main() {
 
     test('isInitialized returns true when packPrice set', () async {
       HydratedBloc.storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/settings_test_5_$runId'),
+        storageDirectory: HydratedStorageDirectory(
+          '/tmp/settings_test_5_$runId',
+        ),
       );
       final cubit = SettingsCubit();
       cubit.setPackPrice(10.0);

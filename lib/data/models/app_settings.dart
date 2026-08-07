@@ -4,15 +4,16 @@ class AppSettings extends Equatable {
   final double? packPrice;
   final int cigarettesPerPack;
 
-  const AppSettings({
-    this.packPrice,
-    this.cigarettesPerPack = 20,
-  });
+  const AppSettings({this.packPrice, this.cigarettesPerPack = 20});
 
   @override
   List<Object?> get props => [packPrice, cigarettesPerPack];
 
-  AppSettings copyWith({double? packPrice, int? cigarettesPerPack, bool clearPackPrice = false}) {
+  AppSettings copyWith({
+    double? packPrice,
+    int? cigarettesPerPack,
+    bool clearPackPrice = false,
+  }) {
     return AppSettings(
       packPrice: clearPackPrice ? null : (packPrice ?? this.packPrice),
       cigarettesPerPack: cigarettesPerPack ?? this.cigarettesPerPack,

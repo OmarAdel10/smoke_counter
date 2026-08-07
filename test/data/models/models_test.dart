@@ -13,22 +13,22 @@ void main() {
 
     test('copyWith preserves unchanged fields', () {
       const original = DailyLog(dateKey: '2024-01-15', count: 5);
-      
+
       // Copy with new dateKey only
       final copiedDate = original.copyWith(dateKey: '2024-01-16');
       expect(copiedDate.dateKey, '2024-01-16');
       expect(copiedDate.count, 5);
-      
+
       // Copy with new count only
       final copiedCount = original.copyWith(count: 10);
       expect(copiedCount.dateKey, '2024-01-15');
       expect(copiedCount.count, 10);
-      
+
       // Copy with both
       final copiedBoth = original.copyWith(dateKey: '2024-01-16', count: 10);
       expect(copiedBoth.dateKey, '2024-01-16');
       expect(copiedBoth.count, 10);
-      
+
       // Copy with no changes
       final copiedNone = original.copyWith();
       expect(copiedNone.dateKey, '2024-01-15');
@@ -40,7 +40,7 @@ void main() {
       const log2 = DailyLog(dateKey: '2024-01-15', count: 5);
       const log3 = DailyLog(dateKey: '2024-01-16', count: 5);
       const log4 = DailyLog(dateKey: '2024-01-15', count: 10);
-      
+
       expect(log1 == log2, isTrue);
       expect(log1 == log3, isFalse);
       expect(log1 == log4, isFalse);
@@ -67,27 +67,30 @@ void main() {
 
     test('copyWith preserves unchanged fields', () {
       const original = AppSettings(packPrice: 15.0, cigarettesPerPack: 25);
-      
+
       // Copy with new packPrice only
       final copiedPrice = original.copyWith(packPrice: 20.0);
       expect(copiedPrice.packPrice, 20.0);
       expect(copiedPrice.cigarettesPerPack, 25);
-      
+
       // Copy with new cigarettesPerPack only
       final copiedCount = original.copyWith(cigarettesPerPack: 30);
       expect(copiedCount.packPrice, 15.0);
       expect(copiedCount.cigarettesPerPack, 30);
-      
+
       // Copy with both
-      final copiedBoth = original.copyWith(packPrice: 20.0, cigarettesPerPack: 30);
+      final copiedBoth = original.copyWith(
+        packPrice: 20.0,
+        cigarettesPerPack: 30,
+      );
       expect(copiedBoth.packPrice, 20.0);
       expect(copiedBoth.cigarettesPerPack, 30);
-      
+
       // Copy with no changes
       final copiedNone = original.copyWith();
       expect(copiedNone.packPrice, 15.0);
       expect(copiedNone.cigarettesPerPack, 25);
-      
+
       // Copy with clearPackPrice to set to null
       final copiedNull = original.copyWith(clearPackPrice: true);
       expect(copiedNull.packPrice, isNull);
@@ -95,10 +98,34 @@ void main() {
     });
 
     test('costPerCigarette calculates correctly', () {
-      expect(const AppSettings(packPrice: 20.0, cigarettesPerPack: 20).costPerCigarette, 1.0);
-      expect(const AppSettings(packPrice: 10.0, cigarettesPerPack: 20).costPerCigarette, 0.5);
-      expect(const AppSettings(packPrice: 10.0, cigarettesPerPack: 25).costPerCigarette, 0.4);
-      expect(const AppSettings(packPrice: 15.50, cigarettesPerPack: 20).costPerCigarette, 0.775);
+      expect(
+        const AppSettings(
+          packPrice: 20.0,
+          cigarettesPerPack: 20,
+        ).costPerCigarette,
+        1.0,
+      );
+      expect(
+        const AppSettings(
+          packPrice: 10.0,
+          cigarettesPerPack: 20,
+        ).costPerCigarette,
+        0.5,
+      );
+      expect(
+        const AppSettings(
+          packPrice: 10.0,
+          cigarettesPerPack: 25,
+        ).costPerCigarette,
+        0.4,
+      );
+      expect(
+        const AppSettings(
+          packPrice: 15.50,
+          cigarettesPerPack: 20,
+        ).costPerCigarette,
+        0.775,
+      );
     });
 
     test('costPerCigarette returns 0 when packPrice null or zero', () {
@@ -120,7 +147,7 @@ void main() {
       const s2 = AppSettings(packPrice: 15.0, cigarettesPerPack: 25);
       const s3 = AppSettings(packPrice: 20.0, cigarettesPerPack: 25);
       const s4 = AppSettings(packPrice: 15.0, cigarettesPerPack: 30);
-      
+
       expect(s1 == s2, isTrue);
       expect(s1 == s3, isFalse);
       expect(s1 == s4, isFalse);
