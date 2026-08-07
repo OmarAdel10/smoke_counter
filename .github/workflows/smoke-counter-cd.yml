@@ -31,7 +31,7 @@ jobs:
         run: flutter analyze
 
       - name: Run tests
-        run: flutter test -j 1
+        run: flutter test
 
   cd:
     name: Shorebird Release & GitHub Release
