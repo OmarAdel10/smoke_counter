@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
+import 'package:smoke_counter/core/theme/app_theme.dart';
 import 'package:smoke_counter/data/cubits/logs_cubit.dart';
 import 'package:smoke_counter/data/cubits/settings_cubit.dart';
 import 'package:smoke_counter/main.dart';
@@ -14,6 +15,19 @@ void main() {
 
   setUp(() {
     HydratedBloc.storage = InMemoryStorage();
+  });
+
+  group('SmokeCounterApp theme', () {
+    testWidgets('forces light theme mode with no dark theme', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const SmokeCounterApp());
+      final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
+
+      expect(app.theme, AppTheme.lightTheme);
+      expect(app.themeMode, ThemeMode.light);
+      expect(app.darkTheme, isNull);
+    });
   });
 
   group('App Navigation & Routing', () {
