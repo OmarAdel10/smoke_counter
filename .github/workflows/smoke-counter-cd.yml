@@ -99,7 +99,6 @@ jobs:
         with:
           release-version: latest
           platform: android
-          args: '--staging'
         env:
           SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
 
