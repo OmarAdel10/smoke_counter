@@ -1,30 +1,278 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
+import 'package:smoke_counter/data/cubits/logs_cubit.dart';
+import 'package:smoke_counter/data/cubits/settings_cubit.dart';
 import 'package:smoke_counter/main.dart';
 
+import 'helpers/in_memory_storage.dart';
+
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  TestWidgetsFlutterBinding.ensureInitialized();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  setUp(() {
+    HydratedBloc.storage = InMemoryStorage();
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  group('App Navigation & Routing', () {
+    Widget buildTestWidget({
+      required LogsCubit logsCubit,
+      required SettingsCubit settingsCubit,
+      Map<String, Widget Function(BuildContext)>? routes,
+    }) {
+      return MaterialApp(
+        home: MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: logsCubit),
+            BlocProvider.value(value: settingsCubit),
+          ],
+          child: const AppEntryPoint(),
+        ),
+        routes:
+            routes ??
+            {'/settings': (_) => const Scaffold(body: Text('Settings'))},
+      );
+    }
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    testWidgets('AppEntryPoint shows Onboarding when packPrice not set', (
+      WidgetTester tester,
+    ) async {
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
+      expect(find.text('Welcome to Smoke Counter'), findsOneWidget);
+      expect(
+        find.text('How much does a pack of cigarettes cost?'),
+        findsOneWidget,
+      );
+
+      logsCubit.close();
+      settingsCubit.close();
+    });
+
+    testWidgets('AppEntryPoint shows MainNavigation when packPrice is set', (
+      WidgetTester tester,
+    ) async {
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+      settingsCubit.setPackPrice(10.0);
+
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
+      expect(find.text('Counter'), findsOneWidget);
+      expect(find.text('Statistics'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
+    });
+
+    testWidgets('Onboarding submits pack price and navigates to main', (
+      WidgetTester tester,
+    ) async {
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
+
+      expect(find.text('Welcome to Smoke Counter'), findsOneWidget);
+
+      await tester.enterText(find.byType(TextFormField), '12.50');
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Counter'), findsOneWidget);
+      expect(find.text('Statistics'), findsOneWidget);
+      expect(settingsCubit.state.packPrice, 12.50);
+
+      logsCubit.close();
+      settingsCubit.close();
+    });
+
+    testWidgets('Bottom navigation switches between Counter and Statistics', (
+      WidgetTester tester,
+    ) async {
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+      settingsCubit.setPackPrice(10.0);
+
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
+
+      expect(find.byIcon(Icons.local_fire_department_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.analytics_rounded), findsOneWidget);
+
+      await tester.tap(find.text('Statistics').first);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(
+        find.byWidgetPredicate(
+          (w) =>
+              w is AppBar &&
+              w.title is Text &&
+              (w.title as Text).data == 'Statistics',
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('No data yet'), findsOneWidget);
+
+      await tester.tap(find.text('Counter').first);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.byIcon(Icons.local_fire_department_rounded), findsOneWidget);
+      expect(find.text('Cigarettes Today'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
+    });
+
+    testWidgets('Settings accessible from Counter screen via app bar', (
+      WidgetTester tester,
+    ) async {
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+      settingsCubit.setPackPrice(10.0);
+
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
+
+      await tester.tap(find.byIcon(Icons.settings_rounded));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(Scaffold), findsOneWidget);
+      expect(find.text('Settings'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
+    });
+
+    testWidgets('Settings accessible from Statistics screen via app bar', (
+      WidgetTester tester,
+    ) async {
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+      settingsCubit.setPackPrice(10.0);
+
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
+
+      await tester.tap(find.text('Statistics'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      await tester.tap(find.byIcon(Icons.settings_rounded));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(Scaffold), findsOneWidget);
+      expect(find.text('Settings'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
+    });
+
+    testWidgets('Counter log button increments and updates spend', (
+      WidgetTester tester,
+    ) async {
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+      settingsCubit.setPackPrice(20.0);
+
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
+
+      expect(find.text('Spent today: EGP 0.00'), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.add_rounded));
+      await tester.pump();
+      await tester.tap(find.byIcon(Icons.add_rounded));
+      await tester.pump();
+      await tester.tap(find.byIcon(Icons.add_rounded));
+      await tester.pump();
+
+      expect(find.text('3'), findsOneWidget);
+      expect(find.text('Spent today: EGP 3.00'), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.remove_rounded));
+      await tester.pump();
+
+      expect(find.text('2'), findsOneWidget);
+      expect(find.text('Spent today: EGP 2.00'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
+    });
+
+    testWidgets('Onboarding validation shows error for empty input', (
+      WidgetTester tester,
+    ) async {
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
+
+      await tester.tap(find.text('Continue'));
+      await tester.pump();
+
+      expect(find.text('Please enter a price'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
+    });
+
+    testWidgets('Onboarding validation shows error for invalid number', (
+      WidgetTester tester,
+    ) async {
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
+
+      await tester.enterText(find.byType(TextFormField), 'abc');
+      await tester.tap(find.text('Continue'));
+      await tester.pump();
+
+      expect(find.text('Enter a valid price'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
+    });
+
+    testWidgets('Onboarding accepts decimal comma', (
+      WidgetTester tester,
+    ) async {
+      final logsCubit = LogsCubit();
+      final settingsCubit = SettingsCubit();
+
+      await tester.pumpWidget(
+        buildTestWidget(logsCubit: logsCubit, settingsCubit: settingsCubit),
+      );
+
+      await tester.enterText(find.byType(TextFormField), '10,50');
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+
+      expect(settingsCubit.state.packPrice, 10.50);
+      expect(find.text('Counter'), findsOneWidget);
+
+      logsCubit.close();
+      settingsCubit.close();
+    });
   });
 }
