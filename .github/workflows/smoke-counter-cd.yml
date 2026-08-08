@@ -7,13 +7,25 @@ on:
     tags:
       - "v*"
 
+env:
+  SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
+
 jobs:
   ci:
     name: CI Checks
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -33,19 +45,27 @@ jobs:
       - name: Run tests
         run: flutter test
 
-  cd:
-    name: Shorebird Release & GitHub Release
-    needs: ci
+  cd-android:
+    name: Shorebird Release & App Build (Android)
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
+    needs: ci
     permissions:
       contents: write
       packages: write
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+          cache: gradle
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -55,23 +75,47 @@ jobs:
 
       - name: Setup Shorebird
         uses: shorebirdtech/setup-shorebird@v1
+        with:
+          cache: true
 
-      - name: Get dependencies
+      - name: Get dependencies and format
         run: flutter pub get
 
+      # if pushed a pure version THAT DOES NOT CONTAIN '-hotfix' word create a relese (e.g. v1.0.0, v1.0.2, etc...)
       - name: Shorebird release (Android)
-        id: shorebird-android
-        run: |
-          shorebird release android --platforms=android-arm64,android-arm \
-            --artifact=apk \
-            --flutter-version=$(flutter --version | head -1 | cut -d' ' -f2)
-        env:
-          SHOREBIRD_TOKEN: ${{ secrets.SHOREBIRD_TOKEN }}
-
-      - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v1
+        if: "startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '-hotfix')"
+        uses: shorebirdtech/shorebird-release@v1
+        id: shorebird-release
         with:
+          platform: android
+          args: '--artifact=apk'
+
+      # if pushed a hotfix version THAT DOES CONTAINS '-hotfix' word create a patch (e.g. v1.0.0-hotfix.1, v1.0.2-hotfix.5, etc...)
+      - name: Shorebird patch (Android)
+        if: "contains(github.ref, '-hotfix')"
+        uses: shorebirdtech/shorebird-patch@v1
+        id: shorebird-patch
+        with:
+          release-version: latest
+          platform: android
+          args: '--staging'
+
+      - name: Rename APK File
+        if: "startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '-hotfix')"
+        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/smoke_counter_${{ github.ref_name }}.apk
+
+      - name: Upload APK
+        if: "startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '-hotfix')"
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/smoke_counter_${{ github.ref_name }}.apk
+
+      - name: Create Github Release
+        if: "startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '-hotfix')"
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/app/outputs/flutter-apk/smoke_counter_${{ github.ref_name }}.apk
           generate_release_notes: true
           draft: false
           prerelease: false
