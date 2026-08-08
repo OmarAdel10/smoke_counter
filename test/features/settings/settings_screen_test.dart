@@ -6,8 +6,14 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:smoke_counter/data/cubits/settings_cubit.dart';
 import 'package:smoke_counter/features/settings/settings_screen.dart';
 
+import '../../helpers/in_memory_storage.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() {
+    HydratedBloc.storage = InMemoryStorage();
+  });
 
   group('SettingsView widget tests', () {
     Widget buildTestWidget({required SettingsCubit settingsCubit}) {
@@ -22,13 +28,6 @@ void main() {
     }
 
     testWidgets('displays settings title', (WidgetTester tester) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/settings_test_${runId}_1',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final settingsCubit = SettingsCubit();
 
       await tester.pumpWidget(buildTestWidget(settingsCubit: settingsCubit));
@@ -40,13 +39,6 @@ void main() {
     testWidgets('displays pack price section header', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/settings_test_${runId}_2',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final settingsCubit = SettingsCubit();
 
       await tester.pumpWidget(buildTestWidget(settingsCubit: settingsCubit));
@@ -70,13 +62,6 @@ void main() {
     });
 
     testWidgets('displays pack price input field', (WidgetTester tester) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/settings_test_${runId}_3',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final settingsCubit = SettingsCubit();
 
       await tester.pumpWidget(buildTestWidget(settingsCubit: settingsCubit));
@@ -96,13 +81,6 @@ void main() {
     testWidgets('displays cigarettes per pack section header', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/settings_test_${runId}_4',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final settingsCubit = SettingsCubit();
 
       await tester.pumpWidget(buildTestWidget(settingsCubit: settingsCubit));
@@ -126,13 +104,6 @@ void main() {
     testWidgets('displays cigarettes per pack input field', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/settings_test_${runId}_5',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final settingsCubit = SettingsCubit();
 
       await tester.pumpWidget(buildTestWidget(settingsCubit: settingsCubit));
@@ -145,13 +116,6 @@ void main() {
     testWidgets('displays cost per cigarette when initialized', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/settings_test_${runId}_6',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final settingsCubit = SettingsCubit();
       settingsCubit.setPackPrice(10.0);
 
@@ -169,13 +133,6 @@ void main() {
     testWidgets('does not display cost per cigarette when not initialized', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/settings_test_${runId}_7',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final settingsCubit = SettingsCubit();
 
       await tester.pumpWidget(buildTestWidget(settingsCubit: settingsCubit));

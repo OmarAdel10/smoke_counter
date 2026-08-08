@@ -8,8 +8,14 @@ import 'package:smoke_counter/data/cubits/logs_cubit.dart';
 import 'package:smoke_counter/data/cubits/settings_cubit.dart';
 import 'package:smoke_counter/features/statistics/statistics_screen.dart';
 
+import '../../helpers/in_memory_storage.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() {
+    HydratedBloc.storage = InMemoryStorage();
+  });
 
   group('StatisticsView widget tests', () {
     Widget buildTestWidget({
@@ -33,13 +39,6 @@ void main() {
     }
 
     testWidgets('displays statistics title', (WidgetTester tester) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/statistics_test_${runId}_1',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 
@@ -55,13 +54,6 @@ void main() {
     testWidgets('displays empty state when no logs', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/statistics_test_${runId}_2',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 
@@ -82,13 +74,6 @@ void main() {
     testWidgets('displays settings icon in app bar', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/statistics_test_${runId}_3',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 
@@ -104,13 +89,6 @@ void main() {
     testWidgets('displays summary cards when logs exist', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/statistics_test_${runId}_4',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 
@@ -133,13 +111,6 @@ void main() {
     testWidgets('displays day list when logs exist', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/statistics_test_${runId}_5',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 

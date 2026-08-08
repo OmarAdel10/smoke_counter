@@ -6,8 +6,14 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:smoke_counter/data/cubits/settings_cubit.dart';
 import 'package:smoke_counter/features/onboarding/onboarding_screen.dart';
 
+import '../../helpers/in_memory_storage.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() {
+    HydratedBloc.storage = InMemoryStorage();
+  });
 
   group('OnboardingView widget tests', () {
     Widget buildTestWidget({required SettingsCubit settingsCubit}) {
@@ -22,13 +28,6 @@ void main() {
     }
 
     testWidgets('displays welcome title', (WidgetTester tester) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/onboarding_test_$runId',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final settingsCubit = SettingsCubit();
 
       await tester.pumpWidget(buildTestWidget(settingsCubit: settingsCubit));
@@ -38,13 +37,6 @@ void main() {
     });
 
     testWidgets('displays pack price question', (WidgetTester tester) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/onboarding_test_$runId',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final settingsCubit = SettingsCubit();
 
       await tester.pumpWidget(buildTestWidget(settingsCubit: settingsCubit));
@@ -57,13 +49,6 @@ void main() {
     });
 
     testWidgets('displays price input field', (WidgetTester tester) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/onboarding_test_$runId',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final settingsCubit = SettingsCubit();
 
       await tester.pumpWidget(buildTestWidget(settingsCubit: settingsCubit));
@@ -75,13 +60,6 @@ void main() {
     });
 
     testWidgets('displays continue button', (WidgetTester tester) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/onboarding_test_$runId',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final settingsCubit = SettingsCubit();
 
       await tester.pumpWidget(buildTestWidget(settingsCubit: settingsCubit));
@@ -92,13 +70,6 @@ void main() {
     });
 
     testWidgets('displays fire icon', (WidgetTester tester) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory(
-          '/tmp/onboarding_test_$runId',
-        ),
-      );
-      HydratedBloc.storage = storage;
       final settingsCubit = SettingsCubit();
 
       await tester.pumpWidget(buildTestWidget(settingsCubit: settingsCubit));

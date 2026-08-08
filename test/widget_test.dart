@@ -7,8 +7,14 @@ import 'package:smoke_counter/data/cubits/logs_cubit.dart';
 import 'package:smoke_counter/data/cubits/settings_cubit.dart';
 import 'package:smoke_counter/main.dart';
 
+import 'helpers/in_memory_storage.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() {
+    HydratedBloc.storage = InMemoryStorage();
+  });
 
   group('App Navigation & Routing', () {
     Widget buildTestWidget({
@@ -33,11 +39,6 @@ void main() {
     testWidgets('AppEntryPoint shows Onboarding when packPrice not set', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_1'),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 
@@ -57,11 +58,6 @@ void main() {
     testWidgets('AppEntryPoint shows MainNavigation when packPrice is set', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_2'),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
       settingsCubit.setPackPrice(10.0);
@@ -79,11 +75,6 @@ void main() {
     testWidgets('Onboarding submits pack price and navigates to main', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_3'),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 
@@ -108,11 +99,6 @@ void main() {
     testWidgets('Bottom navigation switches between Counter and Statistics', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_4'),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
       settingsCubit.setPackPrice(10.0);
@@ -153,11 +139,6 @@ void main() {
     testWidgets('Settings accessible from Counter screen via app bar', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_5'),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
       settingsCubit.setPackPrice(10.0);
@@ -169,7 +150,8 @@ void main() {
       await tester.tap(find.byIcon(Icons.settings_rounded));
       await tester.pumpAndSettle();
 
-      expect(find.text('Settings Screen'), findsOneWidget);
+      expect(find.byType(Scaffold), findsOneWidget);
+      expect(find.text('Settings'), findsOneWidget);
 
       logsCubit.close();
       settingsCubit.close();
@@ -178,11 +160,6 @@ void main() {
     testWidgets('Settings accessible from Statistics screen via app bar', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_6'),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
       settingsCubit.setPackPrice(10.0);
@@ -198,7 +175,8 @@ void main() {
       await tester.tap(find.byIcon(Icons.settings_rounded));
       await tester.pumpAndSettle();
 
-      expect(find.text('Settings Screen'), findsOneWidget);
+      expect(find.byType(Scaffold), findsOneWidget);
+      expect(find.text('Settings'), findsOneWidget);
 
       logsCubit.close();
       settingsCubit.close();
@@ -207,11 +185,6 @@ void main() {
     testWidgets('Counter log button increments and updates spend', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_7'),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
       settingsCubit.setPackPrice(20.0);
@@ -245,11 +218,6 @@ void main() {
     testWidgets('Onboarding validation shows error for empty input', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_8'),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 
@@ -269,11 +237,6 @@ void main() {
     testWidgets('Onboarding validation shows error for invalid number', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_9'),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 
@@ -294,11 +257,6 @@ void main() {
     testWidgets('Onboarding accepts decimal comma', (
       WidgetTester tester,
     ) async {
-      final runId = DateTime.now().millisecondsSinceEpoch;
-      final storage = await HydratedStorage.build(
-        storageDirectory: HydratedStorageDirectory('/tmp/nav_test_${runId}_10'),
-      );
-      HydratedBloc.storage = storage;
       final logsCubit = LogsCubit();
       final settingsCubit = SettingsCubit();
 
