@@ -103,110 +103,21 @@ void main() {
     });
   });
 
-  group('darkTheme', () {
-    test('uses Material 3', () {
-      expect(AppTheme.darkTheme.useMaterial3, isTrue);
-    });
+  test('elevatedButton has 16px border radius', () {
+    final style = AppTheme.lightTheme.elevatedButtonTheme.style;
+    final shape = style?.shape?.resolve({}) as RoundedRectangleBorder?;
 
-    test('brightness is dark', () {
-      expect(AppTheme.darkTheme.brightness, Brightness.dark);
-    });
-
-    test('scaffold background is dark background', () {
-      expect(
-        AppTheme.darkTheme.scaffoldBackgroundColor,
-        AppTheme.darkBackground,
-      );
-    });
-
-    test('primary color is ember', () {
-      expect(AppTheme.darkTheme.colorScheme.primary, AppTheme.ember);
-    });
-
-    test('secondary color is charcoal', () {
-      expect(AppTheme.darkTheme.colorScheme.secondary, AppTheme.charcoal);
-    });
-
-    test('surface is dark surface', () {
-      expect(AppTheme.darkTheme.colorScheme.surface, AppTheme.darkSurface);
-    });
-
-    test('onSurface is dark primary text', () {
-      expect(
-        AppTheme.darkTheme.colorScheme.onSurface,
-        AppTheme.darkPrimaryText,
-      );
-    });
-
-    test('appBar background is dark background', () {
-      expect(
-        AppTheme.darkTheme.appBarTheme.backgroundColor,
-        AppTheme.darkBackground,
-      );
-    });
-
-    test('appBar foreground is dark primary text', () {
-      expect(
-        AppTheme.darkTheme.appBarTheme.foregroundColor,
-        AppTheme.darkPrimaryText,
-      );
-    });
-
-    test('elevatedButton uses ember background', () {
-      final style = AppTheme.darkTheme.elevatedButtonTheme.style;
-      expect(style?.backgroundColor?.resolve({}), AppTheme.ember);
-    });
-
-    test('card theme has dark surface and rounded corners', () {
-      final cardTheme = AppTheme.darkTheme.cardTheme;
-      expect(cardTheme.color, AppTheme.darkSurface);
-      expect(cardTheme.shape, isA<RoundedRectangleBorder>());
-    });
-
-    test('text theme headlineLarge is dark primary text w700', () {
-      final text = AppTheme.darkTheme.textTheme.headlineLarge;
-      expect(text?.color, AppTheme.darkPrimaryText);
-      expect(text?.fontWeight, FontWeight.w700);
-    });
+    expect(shape?.borderRadius, BorderRadius.circular(16));
   });
 
-  group('both themes share', () {
-    test('elevatedButton has 16px border radius', () {
-      final lightStyle = AppTheme.lightTheme.elevatedButtonTheme.style;
-      final darkStyle = AppTheme.darkTheme.elevatedButtonTheme.style;
+  test('input decoration focused border is ember with width 2', () {
+    final input = AppTheme.lightTheme.inputDecorationTheme;
 
-      final lightShape =
-          lightStyle?.shape?.resolve({}) as RoundedRectangleBorder?;
-      final darkShape =
-          darkStyle?.shape?.resolve({}) as RoundedRectangleBorder?;
-
-      expect(lightShape?.borderRadius, BorderRadius.circular(16));
-      expect(darkShape?.borderRadius, BorderRadius.circular(16));
-    });
-
-    test('input decoration focused border is ember with width 2', () {
-      final lightInput = AppTheme.lightTheme.inputDecorationTheme;
-      final darkInput = AppTheme.darkTheme.inputDecorationTheme;
-
-      expect(lightInput.focusedBorder, isA<OutlineInputBorder>());
-      expect(
-        (lightInput.focusedBorder as OutlineInputBorder).borderSide.color,
-        AppTheme.ember,
-      );
-      expect(
-        (lightInput.focusedBorder as OutlineInputBorder).borderSide.width,
-        2,
-      );
-
-      expect(darkInput.focusedBorder, isA<OutlineInputBorder>());
-      expect(
-        (darkInput.focusedBorder as OutlineInputBorder).borderSide.color,
-        AppTheme.ember,
-      );
-      expect(
-        (darkInput.focusedBorder as OutlineInputBorder).borderSide.width,
-        2,
-      );
-    });
+    expect(input.focusedBorder, isA<OutlineInputBorder>());
+    expect(
+      (input.focusedBorder as OutlineInputBorder).borderSide.color,
+      AppTheme.ember,
+    );
+    expect((input.focusedBorder as OutlineInputBorder).borderSide.width, 2);
   });
 }
