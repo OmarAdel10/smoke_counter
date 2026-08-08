@@ -80,6 +80,10 @@ jobs:
       - name: Get dependencies and format
         run: flutter pub get
 
+      - name: Strip local Gradle Java Home path
+        run: |
+          sed -i '/org.gradle.java.home/d' android/gradle.properties
+
       # if pushed a pure version THAT DOES NOT CONTAIN '-hotfix' word create a relese (e.g. v1.0.0, v1.0.2, etc...)
       - name: Shorebird release (Android)
         if: "startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, '-hotfix')"
