@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'core/sync/widget_sync_bridge.dart';
 import 'core/theme/app_theme.dart';
 import 'data/cubits/logs_cubit.dart';
 import 'data/cubits/settings_cubit.dart';
@@ -51,10 +52,15 @@ class AppEntryPoint extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsCubit, AppSettings>(
       builder: (context, settings) {
-        if (settings.isInitialized) {
-          return const MainNavigation();
-        }
-        return const OnboardingScreen();
+        return Stack(
+          children: [
+            if (settings.isInitialized)
+              const MainNavigation()
+            else
+              const OnboardingScreen(),
+            WidgetSyncBridge(cubit: context.read<LogsCubit>()),
+          ],
+        );
       },
     );
   }
