@@ -89,21 +89,27 @@ class _MainNavigationState extends State<MainNavigation> {
               color: AppTheme.ember.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: BottomNavigationBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              currentIndex: _currentIndex,
-              onTap: (index) => setState(() => _currentIndex = index),
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.local_fire_department_rounded),
-                  label: 'Counter',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.analytics_rounded),
-                  label: 'Statistics',
-                ),
-              ],
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                splashFactory: NoSplash.splashFactory,
+                highlightColor: Colors.transparent,
+              ),
+              child: BottomNavigationBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                currentIndex: _currentIndex,
+                onTap: (index) => setState(() => _currentIndex = index),
+                items: [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.local_fire_department_rounded),
+                    label: 'Counter',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.analytics_rounded),
+                    label: 'Statistics',
+                  ),
+                ],
+              ),
             ),
           ),
         ),
